@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import CoursePlanner from "./components/CoursePlanner";
 
 const API_BASE = "http://127.0.0.1:8000";
 
@@ -295,7 +296,11 @@ function App() {
         </section>
       </div>
     </div>
+    <div>
+      <CoursePlanner />
+    </div>
   </div>
+  
 );
 
 }

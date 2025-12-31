@@ -1,0 +1,209 @@
+/* courseplanner.css */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Main container */
+.planner-container {
+  max-width: 800px;
+  margin: 3rem auto;
+  padding: 2rem;
+}
+
+/* Headings */
+h2 {
+  font-size: 2.6rem;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid #333;
+  font-size: 1.1rem;
+}
+
+/* Input fields */
+input {
+  width: 100%;
+  padding: 0.7rem;
+  margin-bottom: 12px;
+  background: #262626;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #f5f5f5;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #666;
+}
+
+input::placeholder {
+  color: #888;
+}
+
+/* Assessment row layout */
+.assessment-item {
+  background: #262626;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Buttons */
+button {
+  padding: 0.7rem 1.2rem;
+  background: #ffffff;
+  color: #000;
+  border: none;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+  transition: opacity 0.2s;
+}
+
+button:hover {
+  opacity: 0.85;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* Secondary button style */
+button.secondary {
+  background: #262626;
+  color: #f5f5f5;
+  border: 1px solid #444;
+}
+
+button.secondary:hover {
+  background: #333;
+  opacity: 1;
+}
+
+/* Results section */
+.results-section {
+  margin-top: 3rem;
+}
+
+.results-card {
+  background: #262626;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #fff;
+}
+
+.results-card strong {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #f5f5f5;
+}
+
+.results-detail {
+  color: #bbb;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Risk level colors */
+.risk-high {
+  border-left-color: #ff4444;
+}
+
+.risk-medium {
+  border-left-color: #ffaa00;
+}
+
+.risk-low {
+  border-left-color: #44ff88;
+}
+
+/* Course info section */
+.course-info {
+  background: #262626;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Muted text */
+.muted {
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+/* Empty state */
+.empty-state {
+  color: #aaa;
+  font-size: 0.95rem;
+  text-align: center;
+  padding: 3rem 1rem;
+  background: #262626;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+}
+/* 5 columns: name | weight | grade | edit | delete */
+.assessment-row {
+  display: grid;
+  grid-template-columns: 2fr 0.7fr 0.7fr auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  width: 100%;
+}
+
+.assessment-row > * {
+  min-width: 0; /* prevents overflow from breaking layout */
+}
+
+/* Keep the name from pushing things to a new line */
+.assessment-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Icon buttons */
+.icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #262626;
+  border: 1px solid #444;
+  color: #f5f5f5;
+  cursor: pointer;
+  margin: 0;           /* overrides button margin in your CSS */
+  padding: 0;
+}
+
+.icon-btn:hover {
+  background: #333;
+}
+
+.icon-btn:active {
+  transform: translateY(1px);
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
