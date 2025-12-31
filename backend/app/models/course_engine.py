@@ -39,3 +39,30 @@ def evaluate_course(course):
         "required_average": round(required_average, 1) if required_average else None,
         "risk": risk
     }
+
+RISK_PRIORITY = {
+    "Unrealistic": 4,
+    "Critical": 3,
+    "Watch": 2,
+    "Safe": 1,
+    "Complete": 0
+}
+
+def rank_courses(courses):
+    evaluated = [evaluate_course(course) for course in courses]
+
+    ranked = sorted(
+        evaluated,
+        key=lambda c: (
+            RISK_PRIORITY[c["risk"]],
+            c["required_average"] if c["required_average"] is not None else 0
+        ),
+        reverse=True
+    )
+
+    # Add explicit priority number
+    for i, course in enumerate(ranked, start=1):
+        course["priority"] = i
+
+    return ranked
+

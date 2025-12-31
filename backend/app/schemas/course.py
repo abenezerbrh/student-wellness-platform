@@ -17,3 +17,6 @@ class CourseEvaluation(BaseModel):
     remaining_weight: float
     required_average: Optional[float]
     risk: str
+
+class CourseListInput(BaseModel):
+    courses: List[CourseInput]
