@@ -1,20 +1,13 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import CoursePlanner from "./components/CoursePlanner";
 
 const API_BASE = "http://127.0.0.1:8000";
 
 function App() {
   const [sessionId, setSessionId] = useState(null);
+  const [activeTab, setActiveTab] = useState("dashboard");
+  const [hoveredBar, setHoveredBar] = useState(null);
 
   const [sleepHours, setSleepHours] = useState("");
   const [stressLevel, setStressLevel] = useState(5);
@@ -27,8 +20,30 @@ function App() {
 
   const [entries, setEntries] = useState([]);
 
+  // Get greeting based on time of day
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
 
-  // Create or reuse anonymous session
+  // Get motivational message based on recent data
+  const getMotivation = () => {
+    if (entries.length === 0) return "Let's start tracking your wellness journey";
+    
+    const recentEntries = entries.slice(-3);
+    const avgSleep = recentEntries.reduce((sum, e) => sum + e.sleep_hours, 0) / recentEntries.length;
+    const avgStress = recentEntries.reduce((sum, e) => sum + e.stress_level, 0) / recentEntries.length;
+    
+    if (avgSleep >= 7 && avgStress <= 5) return "You're doing great! Keep it up 🌟";
+    if (avgSleep < 6) return "Your sleep could use some attention 💤";
+    if (avgStress >= 8) return "High stress detected - take care of yourself 🧘";
+    if (avgSleep >= 7) return "Great sleep habits! 😴";
+    
+    return "Stay consistent with your wellness goals 💪";
+  };
+
   useEffect(() => {
     const existingSession = localStorage.getItem("session_id");
 
@@ -70,7 +85,6 @@ function App() {
     const res = await fetch(`${API_BASE}/wellness/${sessionId}`);
     const data = await res.json();
 
-    // Sort oldest → newest for charts
     const sorted = data.sort(
       (a, b) => new Date(a.created_at) - new Date(b.created_at)
     );
@@ -78,6 +92,7 @@ function App() {
     setEntries(sorted);
   };
 
+  const last7Entries = entries.slice(-7);
 
   const submitWellness = async (e) => {
     e.preventDefault();
@@ -97,11 +112,10 @@ function App() {
 
     fetchSummary();
     fetchInsights();
+    fetchEntries();
 
     setSleepHours("");
     setStudyHours("");
-
-    fetchEntries();
 
     setLoading(false);
   };
@@ -111,15 +125,200 @@ function App() {
   }
 
   return (
-  <div className="app">
-    <h1>Student Wellness Tracker</h1>
-    <p className="session">Session ID: {sessionId}</p>
+    <div className="app">
+      {/* Enhanced Header */}
+      <div className="header-section">
+        <div className="header-content">
+          <div className="header-text">
+            <h1>{getGreeting()} 👋</h1>
+            <p className="header-subtitle">{getMotivation()}</p>
+          </div>
+          <div className="header-stats">
+            <div className="quick-stat">
+              <span className="quick-stat-label">Streak</span>
+              <span className="quick-stat-value">{entries.length > 0 ? Math.min(entries.length, 7) : 0} days</span>
+            </div>
+            <div className="quick-stat">
+              <span className="quick-stat-label">Total Logs</span>
+              <span className="quick-stat-value">{entries.length}</span>
+            </div>
+          </div>
+        </div>
+        <p className="session-id">Session: {sessionId}</p>
+      </div>
 
-    <div className="layout">
-      {/* LEFT COLUMN */}
-      <div className="left">
-        {/* Wellness Form */}
-        <section>
+      {/* Tab Navigation */}
+      <div className="tab-nav">
+        <button
+          className={activeTab === "dashboard" ? "tab-active" : "tab-inactive"}
+          onClick={() => setActiveTab("dashboard")}
+        >
+          Dashboard
+        </button>
+        <button
+          className={activeTab === "log" ? "tab-active" : "tab-inactive"}
+          onClick={() => setActiveTab("log")}
+        >
+          Log Entry
+        </button>
+        <button
+          className={activeTab === "course_evaluator" ? "tab-active" : "tab-inactive"}
+          onClick={() => setActiveTab("course_evaluator")}
+        >
+          Course Evaluator
+        </button>
+      </div>
+
+      {/* Dashboard Tab */}
+      {activeTab === "dashboard" && (
+        <div>
+          {/* Stats Cards Row */}
+          <div className="stats-grid">
+            <div className="stat-card stat-sleep">
+              <div className="stat-label">Sleep</div>
+              <div className="stat-value">{summary?.avg_sleep_hours || "0"}</div>
+              <div className="stat-unit">hours avg</div>
+            </div>
+
+            <div className="stat-card stat-stress">
+              <div className="stat-label">Stress</div>
+              <div className="stat-value">{summary?.avg_stress_level || "0"}</div>
+              <div className="stat-unit">out of 10</div>
+            </div>
+
+            <div className="stat-card stat-study">
+              <div className="stat-label">Study</div>
+              <div className="stat-value">{summary?.avg_study_hours || "0"}</div>
+              <div className="stat-unit">hours avg</div>
+            </div>
+          </div>
+
+          {/* Charts Row - Horizontal */}
+          {entries.length === 0 ? (
+            <div className="card muted">No data yet. Start logging your wellness data!</div>
+          ) : (
+            <div className="charts-row">
+              {/* Sleep Chart */}
+              <div className="chart-card">
+                <h3>Sleep Trends</h3>
+                <div className="chart-wrapper">
+                  <div className="simple-chart">
+                    {last7Entries.map((entry, i) => (
+                      <div 
+                        key={i} 
+                        className="chart-bar-container"
+                        onMouseEnter={() => setHoveredBar({ type: 'sleep', index: i, entry })}
+                        onMouseLeave={() => setHoveredBar(null)}
+                      >
+                        <div
+                          className="chart-bar chart-bar-sleep"
+                          style={{ height: `${(entry.sleep_hours / 24) * 150}px` }}
+                        ></div>
+                        <div className="chart-day">{new Date(entry.created_at).toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {hoveredBar?.type === 'sleep' && (
+                    <div className="chart-tooltip">
+                      <div className="tooltip-date">{new Date(hoveredBar.entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+                      <div className="tooltip-value">{hoveredBar.entry.sleep_hours} hours</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Stress Chart */}
+              <div className="chart-card">
+                <h3>Stress Trends</h3>
+                <div className="chart-wrapper">
+                  <div className="simple-chart">
+                    {last7Entries.map((entry, i) => (
+                      <div 
+                        key={i} 
+                        className="chart-bar-container"
+                        onMouseEnter={() => setHoveredBar({ type: 'stress', index: i, entry })}
+                        onMouseLeave={() => setHoveredBar(null)}
+                      >
+                        <div
+                          className="chart-bar chart-bar-stress"
+                          style={{ height: `${(entry.stress_level / 10) * 150}px` }}
+                        ></div>
+                        <div className="chart-day">{new Date(entry.created_at).toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {hoveredBar?.type === 'stress' && (
+                    <div className="chart-tooltip">
+                      <div className="tooltip-date">{new Date(hoveredBar.entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+                      <div className="tooltip-value">Level {hoveredBar.entry.stress_level}/10</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Study Chart */}
+              <div className="chart-card">
+                <h3>Study Trends</h3>
+                <div className="chart-wrapper">
+                  <div className="simple-chart">
+                    {last7Entries.map((entry, i) => (
+                      <div 
+                        key={i} 
+                        className="chart-bar-container"
+                        onMouseEnter={() => setHoveredBar({ type: 'study', index: i, entry })}
+                        onMouseLeave={() => setHoveredBar(null)}
+                      >
+                        <div
+                          className="chart-bar chart-bar-study"
+                          style={{ height: `${(entry.study_hours / 24) * 150}px` }}
+                        ></div>
+                        <div className="chart-day">{new Date(entry.created_at).toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {hoveredBar?.type === 'study' && (
+                    <div className="chart-tooltip">
+                      <div className="tooltip-date">{new Date(hoveredBar.entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+                      <div className="tooltip-value">{hoveredBar.entry.study_hours} hours</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Bottom Grid - Insights & Course Overview */}
+          <div className="dashboard-grid">
+            <div className="dashboard-left">
+              {insights.length > 0 && (
+                <div className="card">
+                  <h2>💡 Insights</h2>
+                  <div className="insights-list">
+                    {insights.map((insight, index) => (
+                      <div key={index} className="insight-item">
+                        {insight}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="dashboard-right">
+              <div className="card">
+                <h2>📚 Course Overview</h2>
+                <div className="muted" style={{ padding: '2rem 1rem' }}>
+                  Add courses in the Course Evaluator tab to see your progress here
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Log Entry Tab */}
+      {activeTab === "log" && (
+        <div className="log-page">
           <div className="card">
             <h2>Log Today</h2>
 
@@ -130,6 +329,7 @@ function App() {
                   type="number"
                   min="0"
                   max="24"
+                  step="0.5"
                   value={sleepHours}
                   onChange={(e) => setSleepHours(e.target.value)}
                   required
@@ -137,9 +337,9 @@ function App() {
               </label>
 
               <label>
-                Stress Level: {stressLevel}
+                Stress Level
                 <input
-                  type="range"
+                  type="number"
                   min="1"
                   max="10"
                   value={stressLevel}
@@ -153,6 +353,7 @@ function App() {
                   type="number"
                   min="0"
                   max="24"
+                  step="0.5"
                   value={studyHours}
                   onChange={(e) => setStudyHours(e.target.value)}
                   required
@@ -164,145 +365,17 @@ function App() {
               </button>
             </form>
           </div>
-        </section>
+        </div>
+      )}
 
-        {/* Summary */}
-        {summary && (
-          <section>
-            <div className="card">
-              <h2>Summary</h2>
-              <ul>
-                <li>Entries: {summary.entries}</li>
-                <li>Avg Sleep: {summary.avg_sleep_hours}</li>
-                <li>Avg Stress: {summary.avg_stress_level}</li>
-                <li>Avg Study: {summary.avg_study_hours}</li>
-              </ul>
-            </div>
-          </section>
-        )}
-
-        {/* Insights */}
-        {insights.length > 0 && (
-          <section>
-            <div className="card">
-              <h2>Insights</h2>
-              <ul>
-                {insights.map((insight, index) => (
-                  <li key={index}>{insight}</li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        )}
-      </div>
-
-      {/* RIGHT COLUMN */}
-      <div className="right">
-        <section>
-          <h2>Trends</h2>
-
-          {entries.length === 0 ? (
-            <div className="card muted">No data yet</div>
-          ) : (
-            <>
-              {/* Sleep Chart */}
-              <div className="card">
-                <h3>Sleep (hours)</h3>
-                <ResponsiveContainer width="100%" height={250}>
-                  <LineChart data={entries}>
-                    <CartesianGrid stroke="#333" />
-                    <XAxis
-                      dataKey="created_at"
-                      tickFormatter={(v) =>
-                        new Date(v).toLocaleDateString()
-                      }
-                    />
-                    <YAxis domain={[0, 24]} />
-                    <Tooltip
-                      labelFormatter={(v) =>
-                        new Date(v).toLocaleString()
-                      }
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="sleep_hours"
-                      stroke="#4f8cff"
-                      strokeWidth={2}
-                      dot={{ r: 3 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Study Chart */}
-              <div className="card">
-                <h3>Study (hours)</h3>
-                <ResponsiveContainer width="100%" height={250}>
-                  <LineChart data={entries}>
-                    <CartesianGrid stroke="#333" />
-                    <XAxis
-                      dataKey="created_at"
-                      tickFormatter={(v) =>
-                        new Date(v).toLocaleDateString()
-                      }
-                    />
-                    <YAxis domain={[0, 24]} />
-                    <Tooltip
-                      labelFormatter={(v) =>
-                        new Date(v).toLocaleString()
-                      }
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="study_hours"
-                      stroke="#4caf50"
-                      strokeWidth={2}
-                      dot={{ r: 3 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-
-              {/* Stress Chart */}
-              <div className="card">
-                <h3>Stress</h3>
-                <ResponsiveContainer width="100%" height={250}>
-                  <LineChart data={entries}>
-                    <CartesianGrid stroke="#333" />
-                    <XAxis
-                      dataKey="created_at"
-                      tickFormatter={(v) =>
-                        new Date(v).toLocaleDateString()
-                      }
-                    />
-                    <YAxis domain={[1, 10]} />
-                    <Tooltip
-                      labelFormatter={(v) =>
-                        new Date(v).toLocaleString()
-                      }
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="stress_level"
-                      stroke="#ff6b6b"
-                      strokeWidth={2}
-                      dot={{ r: 3 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </>
-          )}
-        </section>
-      </div>
+      {/* Course Evaluator Tab */}
+      {activeTab === "course_evaluator" && (
+        <div className="course-evaluator-page">
+          <CoursePlanner />
+        </div>
+      )}
     </div>
-    <div>
-      <CoursePlanner />
-    </div>
-  </div>
-  
-);
-
+  );
 }
 
 export default App;

@@ -4,12 +4,8 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  background-color: #1e1e1e;
-  color: #f5f5f5;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-}
+/* ❌ REMOVE body styling from component CSS */
+/* body styles should live in App.css */
 
 /* Main container */
 .planner-container {
@@ -20,32 +16,32 @@ body {
 
 /* Headings */
 h2 {
-  font-size: 2.6rem;
+  font-size: 2.4rem;
   margin-bottom: 1rem;
 }
 
 h3 {
-  margin-top: 2.5rem;
+  margin-top: 2rem;
   margin-bottom: 0.75rem;
   padding-bottom: 0.25rem;
   border-bottom: 1px solid #333;
   font-size: 1.1rem;
 }
 
-/* Input fields */
-input {
+/* Inputs + selects */
+input,
+select {
   width: 100%;
   padding: 0.7rem;
-  margin-bottom: 12px;
   background: #262626;
   border: 1px solid #444;
   border-radius: 6px;
   color: #f5f5f5;
   font-size: 0.95rem;
-  transition: border-color 0.2s;
 }
 
-input:focus {
+input:focus,
+select:focus {
   outline: none;
   border-color: #666;
 }
@@ -54,27 +50,29 @@ input::placeholder {
   color: #888;
 }
 
-/* Assessment row layout */
-.assessment-item {
-  background: #262626;
-  border-radius: 8px;
-  padding: 1rem;
+/* Course selector */
+.course-select-label {
+  display: block;
   margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #bbb;
 }
 
-/* Buttons */
+.course-select {
+  margin-top: 0.5rem;
+}
+
+/* Buttons (primary only) */
 button {
-  padding: 0.7rem 1.2rem;
+  padding: 0.65rem 1.1rem;
   background: #ffffff;
   color: #000;
   border: none;
   border-radius: 999px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  margin-right: 0.5rem;
-  margin-top: 0.5rem;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, transform 0.1s;
 }
 
 button:hover {
@@ -84,20 +82,140 @@ button:hover {
 button:active {
   transform: translateY(1px);
 }
+button:focus {
+  outline: none;
+}
 
-/* Secondary button style */
-button.secondary {
+
+/* Icon buttons (isolated from global button styles) */
+.icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
   background: #262626;
-  color: #f5f5f5;
   border: 1px solid #444;
+  color: #f5f5f5;
+  cursor: pointer;
+  padding: 0;
 }
 
-button.secondary:hover {
+.icon-btn:hover {
   background: #333;
-  opacity: 1;
 }
 
-/* Results section */
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Course info section */
+.course-info {
+  background: #262626;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Assessment edit row */
+.assessment-row {
+  display: grid;
+  grid-template-columns: 2fr 0.8fr 0.8fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+/* Assessment table
+.assessment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: #262626;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.assessment-table th,
+.assessment-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.assessment-table thead {
+  background: #2f2f2f;
+  border-bottom: 1px solid #444;
+}
+
+.assessment-table th {
+  font-size: 0.85rem;
+  color: #bbb;
+  font-weight: 600;
+}
+
+.assessment-table tbody tr {
+  border-bottom: 1px solid #333;
+}
+
+.assessment-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.assessment-table tbody tr:hover {
+  background: #2d2d2d;
+} */
+/* Minimal assessment table */
+.assessment-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #222;
+}
+
+.assessment-table th,
+.assessment-table td {
+  padding: 4px 6px;          /* tight spacing */
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.assessment-table th {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #ccc;
+}
+
+.assessment-table tr:last-child td {
+  border-bottom: none;
+}
+/* Icon-only action buttons */
+.assessment-table button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: 6px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.assessment-table button:hover {
+  color: #fff;
+}
+
+/* Actions column */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+/* Muted text */
+.muted {
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+/* Results */
 .results-section {
   margin-top: 3rem;
 }
@@ -110,100 +228,6 @@ button.secondary:hover {
   border-left: 4px solid #fff;
 }
 
-.results-card strong {
-  display: block;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  color: #f5f5f5;
-}
-
-.results-detail {
-  color: #bbb;
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-/* Risk level colors */
-.risk-high {
-  border-left-color: #ff4444;
-}
-
-.risk-medium {
-  border-left-color: #ffaa00;
-}
-
-.risk-low {
-  border-left-color: #44ff88;
-}
-
-/* Course info section */
-.course-info {
-  background: #262626;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-/* Muted text */
-.muted {
-  color: #aaa;
-  font-size: 0.95rem;
-}
-
-/* Empty state */
-.empty-state {
-  color: #aaa;
-  font-size: 0.95rem;
-  text-align: center;
-  padding: 3rem 1rem;
-  background: #262626;
-  border-radius: 12px;
-  margin-top: 1.5rem;
-}
-/* 5 columns: name | weight | grade | edit | delete */
-.assessment-row {
-  display: grid;
-  grid-template-columns: 2fr 0.7fr 0.7fr auto auto;
-  gap: 0.75rem;
-  align-items: center;
-  width: 100%;
-}
-
-.assessment-row > * {
-  min-width: 0; /* prevents overflow from breaking layout */
-}
-
-/* Keep the name from pushing things to a new line */
-.assessment-name {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Icon buttons */
-.icon-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  background: #262626;
-  border: 1px solid #444;
-  color: #f5f5f5;
-  cursor: pointer;
-  margin: 0;           /* overrides button margin in your CSS */
-  padding: 0;
-}
-
-.icon-btn:hover {
-  background: #333;
-}
-
-.icon-btn:active {
-  transform: translateY(1px);
-}
-
-.icon-btn svg {
-  width: 18px;
-  height: 18px;
-}
+.risk-high { border-left-color: #ff4444; }
+.risk-medium { border-left-color: #ffaa00; }
+.risk-low { border-left-color: #44ff88; }
