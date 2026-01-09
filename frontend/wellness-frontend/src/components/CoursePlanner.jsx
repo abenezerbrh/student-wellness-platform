@@ -15,6 +15,7 @@ export default function CoursePlanner() {
     const [courses, setCourses] = useState([createEmptyCourse()]);
     const [activeCourseId, setActiveCourseId] = useState(courses[0].id);
     const [results, setResults] = useState(null);
+    const [message, setMessage] = useState(null);
 
     const activeCourse = courses.find(c => c.id === activeCourseId);
 
@@ -113,17 +114,20 @@ export default function CoursePlanner() {
     /* ---------- Submit ---------- */
     const submitCourse = async () => {
         const payload = {
-            courses: courses.map(course => ({
-                name: course.name,
-                target_grade: Number(course.target_grade),
-                assessments: course.assessments
-                    .filter(a => a.name && a.weight)
-                    .map(a => ({
-                        name: a.name,
-                        weight: Number(a.weight),
-                        grade: a.grade === "" ? null : Number(a.grade)
-                    }))
-            }))
+            courses: courses
+                .filter(course => course.name.trim() !== "")
+                .map(course => ({
+
+                    name: course.name,
+                    target_grade: Number(course.target_grade),
+                    assessments: course.assessments
+                        .filter(a => a.name && a.weight)
+                        .map(a => ({
+                            name: a.name,
+                            weight: Number(a.weight),
+                            grade: a.grade === "" ? null : Number(a.grade)
+                        }))
+                }))
         };
 
         const res = await fetch("http://127.0.0.1:8000/courses/rank", {
@@ -132,7 +136,15 @@ export default function CoursePlanner() {
             body: JSON.stringify(payload)
         });
 
-        setResults(await res.json());
+        const data = await res.json();
+
+        if (data.status === "error") {
+            setMessage(data.message);
+            setResults([]);
+        } else {
+            setMessage(null);
+            setResults(data.data);
+        }
     };
 
     /* ---------- Render ---------- */
@@ -148,11 +160,14 @@ export default function CoursePlanner() {
                     onChange={(e) => setActiveCourseId(e.target.value)}
                     className="course-select"
                 >
-                    {courses.map(course => (
-                        <option key={course.id} value={course.id}>
-                            {course.name}
-                        </option>
-                    ))}
+                    {courses
+                        .filter(course => course.name.trim() !== "")
+                        .map(course => (
+                            <option key={course.id} value={course.id}>
+                                {course.name}
+                            </option>
+                        ))}
+
                 </select>
             </label>
 
@@ -259,7 +274,13 @@ export default function CoursePlanner() {
 
             <button onClick={submitCourse}>Evaluate Courses</button>
 
-            {results && (
+            {message && (
+                <div className="error-message">
+                    {message}
+                </div>
+            )}
+
+            {results && results.length > 0 && (
                 <div className="results-section">
                     <h3>Result</h3>
                     {results.map(r => (
@@ -267,12 +288,13 @@ export default function CoursePlanner() {
                             <strong>{r.priority}. {r.course}</strong>
                             <div>
                                 Risk: {r.risk}<br />
-                                Required Avg: {r.required_average}%
+                                Required Avg: {r.required_average ?? "—"}%
                             </div>
                         </div>
                     ))}
                 </div>
             )}
+
         </div>
     );
 }

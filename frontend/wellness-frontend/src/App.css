@@ -1,6 +1,17 @@
 /* Global reset */
+
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
 * {
   box-sizing: border-box;
+}
+body,html{
+  width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -12,9 +23,13 @@ body {
 
 /* Page container */
 .app {
-  max-width: 100%;
+  width: 100%;
   margin: 0;
-  padding: 2.5rem 4rem;
+  padding: 2.5rem 2rem;
+}
+.content {
+  margin: 0 auto;          /* ✅ centers content */
+  width: 100%;
 }
 
 /* Enhanced Header */
@@ -22,6 +37,7 @@ body {
   margin-bottom: 3rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid #2a2a2a;
+  width: 100%;
 }
 
 .header-content {
@@ -80,40 +96,85 @@ body {
 }
 
 /* Tab Navigation */
-.tab-nav {
+.tab-container {
+  position: relative;
   display: flex;
-  gap: 0.75rem;
-  margin-bottom: 3rem;
-  border-bottom: 1px solid #2a2a2a;
-  padding-bottom: 0;
+  gap: 0;
+  padding: 6px;
+  background: #242424;
+  border-radius: 10px;
+  width: fit-content;
+  margin-bottom: 10px;
 }
 
-.tab-nav button {
-  margin: 0;
-  border-radius: 8px 8px 0 0;
-  padding: 0.75rem 1.5rem;
-  font-size: 0.95rem;
+/* Sliding indicator */
+.indicator {
+  position: absolute;
+  inset: 6px auto auto 6px;
+
+  width: 140px;
+  height: 36px;
+  background: #ffffff;
+  border-radius: 8px;
+  z-index: 1;
+  transition: transform 0.25s ease;
+  box-shadow:
+    0px 3px 8px rgba(0, 0, 0, 0.12),
+    0px 3px 1px rgba(0, 0, 0, 0.04);
+}
+
+/* Indicator positions */
+.indicator.dashboard {
+  transform: translateX(0);
+}
+
+.indicator.log {
+  transform: translateX(140px);
+}
+
+.indicator.course_evaluator {
+  transform: translateX(280px);
+}
+
+/* Tabs */
+.tab_label {
+  width: 140px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  border: none;
+
+  white-space: nowrap;
   font-weight: 500;
-  border-bottom: 3px solid transparent;
-  transition: all 0.2s ease;
+  font-size: 0.9rem;
+
+  color: #777;
+  cursor: pointer;
+
+  z-index: 2;
 }
 
-.tab-active {
-  background: #2a2a2a !important;
-  color: #fff !important;
-  border-bottom: 3px solid #fff !important;
+.tab_label.active {
+  color: #000;
 }
 
-.tab-inactive {
+
+.tab_label:hover {
+  opacity: 1;
+}
+
+.tab-container button {
+  margin-top: 0 !important;
+  padding: 0 !important;
   background: transparent !important;
-  color: #888 !important;
-  border: none !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
-.tab-inactive:hover {
-  background: #2a2a2a !important;
-  color: #fff !important;
-}
 
 /* Stats Grid */
 .stats-grid {
@@ -389,14 +450,13 @@ button:disabled {
 
 /* Log Page */
 .log-page {
-  max-width: 600px;
   margin: 0 auto;
 }
 
 /* Course Evaluator Page */
 .course-evaluator-page {
-  max-width: 900px;
   margin: 0 auto;
+  width: 100%
 }
 
 /* Responsive */

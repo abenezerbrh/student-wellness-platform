@@ -31,16 +31,16 @@ function App() {
   // Get motivational message based on recent data
   const getMotivation = () => {
     if (entries.length === 0) return "Let's start tracking your wellness journey";
-    
+
     const recentEntries = entries.slice(-3);
     const avgSleep = recentEntries.reduce((sum, e) => sum + e.sleep_hours, 0) / recentEntries.length;
     const avgStress = recentEntries.reduce((sum, e) => sum + e.stress_level, 0) / recentEntries.length;
-    
+
     if (avgSleep >= 7 && avgStress <= 5) return "You're doing great! Keep it up 🌟";
     if (avgSleep < 6) return "Your sleep could use some attention 💤";
     if (avgStress >= 8) return "High stress detected - take care of yourself 🧘";
     if (avgSleep >= 7) return "Great sleep habits! 😴";
-    
+
     return "Stay consistent with your wellness goals 💪";
   };
 
@@ -126,6 +126,7 @@ function App() {
 
   return (
     <div className="app">
+      <div className="content">
       {/* Enhanced Header */}
       <div className="header-section">
         <div className="header-content">
@@ -148,26 +149,33 @@ function App() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="tab-nav">
+      <div className="tab-container">
+        <div
+          className={`indicator ${activeTab}`}
+        />
+
         <button
-          className={activeTab === "dashboard" ? "tab-active" : "tab-inactive"}
+          className={`tab_label ${activeTab === "dashboard" ? "active" : ""}`}
           onClick={() => setActiveTab("dashboard")}
         >
           Dashboard
         </button>
+
         <button
-          className={activeTab === "log" ? "tab-active" : "tab-inactive"}
+          className={`tab_label ${activeTab === "log" ? "active" : ""}`}
           onClick={() => setActiveTab("log")}
         >
           Log Entry
         </button>
+
         <button
-          className={activeTab === "course_evaluator" ? "tab-active" : "tab-inactive"}
+          className={`tab_label ${activeTab === "course_evaluator" ? "active" : ""}`}
           onClick={() => setActiveTab("course_evaluator")}
         >
           Course Evaluator
         </button>
       </div>
+
 
       {/* Dashboard Tab */}
       {activeTab === "dashboard" && (
@@ -204,8 +212,8 @@ function App() {
                 <div className="chart-wrapper">
                   <div className="simple-chart">
                     {last7Entries.map((entry, i) => (
-                      <div 
-                        key={i} 
+                      <div
+                        key={i}
                         className="chart-bar-container"
                         onMouseEnter={() => setHoveredBar({ type: 'sleep', index: i, entry })}
                         onMouseLeave={() => setHoveredBar(null)}
@@ -233,8 +241,8 @@ function App() {
                 <div className="chart-wrapper">
                   <div className="simple-chart">
                     {last7Entries.map((entry, i) => (
-                      <div 
-                        key={i} 
+                      <div
+                        key={i}
                         className="chart-bar-container"
                         onMouseEnter={() => setHoveredBar({ type: 'stress', index: i, entry })}
                         onMouseLeave={() => setHoveredBar(null)}
@@ -262,8 +270,8 @@ function App() {
                 <div className="chart-wrapper">
                   <div className="simple-chart">
                     {last7Entries.map((entry, i) => (
-                      <div 
-                        key={i} 
+                      <div
+                        key={i}
                         className="chart-bar-container"
                         onMouseEnter={() => setHoveredBar({ type: 'study', index: i, entry })}
                         onMouseLeave={() => setHoveredBar(null)}
@@ -374,6 +382,7 @@ function App() {
           <CoursePlanner />
         </div>
       )}
+      </div>
     </div>
   );
 }

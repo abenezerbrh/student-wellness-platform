@@ -49,6 +49,14 @@ RISK_PRIORITY = {
 }
 
 def rank_courses(courses):
+    valid, message = validate_courses(courses)
+
+    if not valid:
+        return{
+            "status": "error",
+            "message": message,
+            "data": []
+        }
     evaluated = [evaluate_course(course) for course in courses]
 
     ranked = sorted(
@@ -64,5 +72,32 @@ def rank_courses(courses):
     for i, course in enumerate(ranked, start=1):
         course["priority"] = i
 
-    return ranked
+    return {
+        "status": "success",
+        "message": None,
+        "data": ranked
+    }
 
+def is_assessment(courses):
+    for course in courses:
+        if not course.name:
+            continue
+        for a in course.assessments:
+            if a.weight is not None and a.weight > 0:
+                return True
+    return False
+
+def validate_courses(courses):
+    if not courses:
+        return False, "No courses added yet"
+    
+    for course in courses:
+        if not course.name:
+            continue
+        
+        for a in course.assessments:
+            if a.weight and a.weight > 0:
+                return True, None
+            if not a.weight:
+                return False, "Add a weighted assessment"
+    return False, "Add at least one assessment with a weight before evaluating."
