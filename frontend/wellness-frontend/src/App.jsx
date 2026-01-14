@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import CoursePlanner from "./components/CoursePlanner";
-
+import WellnessLogger from "./components/WellnessLogger";
+import { Sun, SunMedium, MoonStar, Lightbulb, Book } from "lucide-react";
 const API_BASE = "http://127.0.0.1:8000";
 
 function App() {
@@ -23,9 +24,30 @@ function App() {
   // Get greeting based on time of day
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good morning";
-    if (hour < 18) return "Good afternoon";
-    return "Good evening";
+
+    if (hour < 12) {
+      return (
+        <h1 className="greeting">
+          Good morning
+          <Sun className="greeting-icon" />
+        </h1>
+
+      );
+    }
+
+    if (hour < 18) {
+      return (
+        <>
+          Good afternoon <SunMedium className="greeting-icon" />
+        </>
+      );
+    }
+
+    return (
+      <>
+        Good evening <MoonStar className="greeting-icon" />
+      </>
+    );
   };
 
   // Get motivational message based on recent data
@@ -127,261 +149,223 @@ function App() {
   return (
     <div className="app">
       <div className="content">
-      {/* Enhanced Header */}
-      <div className="header-section">
-        <div className="header-content">
-          <div className="header-text">
-            <h1>{getGreeting()} 👋</h1>
-            <p className="header-subtitle">{getMotivation()}</p>
-          </div>
-          <div className="header-stats">
-            <div className="quick-stat">
-              <span className="quick-stat-label">Streak</span>
-              <span className="quick-stat-value">{entries.length > 0 ? Math.min(entries.length, 7) : 0} days</span>
+        {/* Enhanced Header */}
+        <div className="header-section">
+          <div className="header-content">
+            <div className="header-text">
+              <h1>{getGreeting()}</h1>
+              <p className="header-subtitle">{getMotivation()}</p>
             </div>
-            <div className="quick-stat">
-              <span className="quick-stat-label">Total Logs</span>
-              <span className="quick-stat-value">{entries.length}</span>
+            <div className="header-stats">
+              <div className="quick-stat">
+                <span className="quick-stat-label">Streak</span>
+                <span className="quick-stat-value">{entries.length > 0 ? Math.min(entries.length, 7) : 0} days</span>
+              </div>
+              <div className="quick-stat">
+                <span className="quick-stat-label">Total Logs</span>
+                <span className="quick-stat-value">{entries.length}</span>
+              </div>
             </div>
           </div>
+          <p className="session-id">Session: {sessionId}</p>
         </div>
-        <p className="session-id">Session: {sessionId}</p>
-      </div>
 
-      {/* Tab Navigation */}
-      <div className="tab-container">
-        <div
-          className={`indicator ${activeTab}`}
-        />
+        {/* Tab Navigation */}
+        <div className="tab-container">
+          <div
+            className={`indicator ${activeTab}`}
+          />
 
-        <button
-          className={`tab_label ${activeTab === "dashboard" ? "active" : ""}`}
-          onClick={() => setActiveTab("dashboard")}
-        >
-          Dashboard
-        </button>
+          <button
+            className={`tab_label ${activeTab === "dashboard" ? "active" : ""}`}
+            onClick={() => setActiveTab("dashboard")}
+          >
+            Dashboard
+          </button>
 
-        <button
-          className={`tab_label ${activeTab === "log" ? "active" : ""}`}
-          onClick={() => setActiveTab("log")}
-        >
-          Log Entry
-        </button>
+          <button
+            className={`tab_label ${activeTab === "log" ? "active" : ""}`}
+            onClick={() => setActiveTab("log")}
+          >
+            Log Entry
+          </button>
 
-        <button
-          className={`tab_label ${activeTab === "course_evaluator" ? "active" : ""}`}
-          onClick={() => setActiveTab("course_evaluator")}
-        >
-          Course Evaluator
-        </button>
-      </div>
+          <button
+            className={`tab_label ${activeTab === "course_evaluator" ? "active" : ""}`}
+            onClick={() => setActiveTab("course_evaluator")}
+          >
+            Course Evaluator
+          </button>
+        </div>
 
 
-      {/* Dashboard Tab */}
-      {activeTab === "dashboard" && (
-        <div>
-          {/* Stats Cards Row */}
-          <div className="stats-grid">
-            <div className="stat-card stat-sleep">
-              <div className="stat-label">Sleep</div>
-              <div className="stat-value">{summary?.avg_sleep_hours || "0"}</div>
-              <div className="stat-unit">hours avg</div>
-            </div>
-
-            <div className="stat-card stat-stress">
-              <div className="stat-label">Stress</div>
-              <div className="stat-value">{summary?.avg_stress_level || "0"}</div>
-              <div className="stat-unit">out of 10</div>
-            </div>
-
-            <div className="stat-card stat-study">
-              <div className="stat-label">Study</div>
-              <div className="stat-value">{summary?.avg_study_hours || "0"}</div>
-              <div className="stat-unit">hours avg</div>
-            </div>
-          </div>
-
-          {/* Charts Row - Horizontal */}
-          {entries.length === 0 ? (
-            <div className="card muted">No data yet. Start logging your wellness data!</div>
-          ) : (
-            <div className="charts-row">
-              {/* Sleep Chart */}
-              <div className="chart-card">
-                <h3>Sleep Trends</h3>
-                <div className="chart-wrapper">
-                  <div className="simple-chart">
-                    {last7Entries.map((entry, i) => (
-                      <div
-                        key={i}
-                        className="chart-bar-container"
-                        onMouseEnter={() => setHoveredBar({ type: 'sleep', index: i, entry })}
-                        onMouseLeave={() => setHoveredBar(null)}
-                      >
-                        <div
-                          className="chart-bar chart-bar-sleep"
-                          style={{ height: `${(entry.sleep_hours / 24) * 150}px` }}
-                        ></div>
-                        <div className="chart-day">{new Date(entry.created_at).toLocaleDateString('en-US', { weekday: 'short' })}</div>
-                      </div>
-                    ))}
-                  </div>
-                  {hoveredBar?.type === 'sleep' && (
-                    <div className="chart-tooltip">
-                      <div className="tooltip-date">{new Date(hoveredBar.entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
-                      <div className="tooltip-value">{hoveredBar.entry.sleep_hours} hours</div>
-                    </div>
-                  )}
-                </div>
+        {/* Dashboard Tab */}
+        {activeTab === "dashboard" && (
+          <div>
+            {/* Stats Cards Row */}
+            <div className="stats-grid">
+              <div className="stat-card stat-sleep">
+                <div className="stat-label">Sleep</div>
+                <div className="stat-value">{summary?.avg_sleep_hours || "0"}</div>
+                <div className="stat-unit">hours avg</div>
               </div>
 
-              {/* Stress Chart */}
-              <div className="chart-card">
-                <h3>Stress Trends</h3>
-                <div className="chart-wrapper">
-                  <div className="simple-chart">
-                    {last7Entries.map((entry, i) => (
-                      <div
-                        key={i}
-                        className="chart-bar-container"
-                        onMouseEnter={() => setHoveredBar({ type: 'stress', index: i, entry })}
-                        onMouseLeave={() => setHoveredBar(null)}
-                      >
-                        <div
-                          className="chart-bar chart-bar-stress"
-                          style={{ height: `${(entry.stress_level / 10) * 150}px` }}
-                        ></div>
-                        <div className="chart-day">{new Date(entry.created_at).toLocaleDateString('en-US', { weekday: 'short' })}</div>
-                      </div>
-                    ))}
-                  </div>
-                  {hoveredBar?.type === 'stress' && (
-                    <div className="chart-tooltip">
-                      <div className="tooltip-date">{new Date(hoveredBar.entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
-                      <div className="tooltip-value">Level {hoveredBar.entry.stress_level}/10</div>
-                    </div>
-                  )}
-                </div>
+              <div className="stat-card stat-stress">
+                <div className="stat-label">Stress</div>
+                <div className="stat-value">{summary?.avg_stress_level || "0"}</div>
+                <div className="stat-unit">out of 10</div>
               </div>
 
-              {/* Study Chart */}
-              <div className="chart-card">
-                <h3>Study Trends</h3>
-                <div className="chart-wrapper">
-                  <div className="simple-chart">
-                    {last7Entries.map((entry, i) => (
-                      <div
-                        key={i}
-                        className="chart-bar-container"
-                        onMouseEnter={() => setHoveredBar({ type: 'study', index: i, entry })}
-                        onMouseLeave={() => setHoveredBar(null)}
-                      >
-                        <div
-                          className="chart-bar chart-bar-study"
-                          style={{ height: `${(entry.study_hours / 24) * 150}px` }}
-                        ></div>
-                        <div className="chart-day">{new Date(entry.created_at).toLocaleDateString('en-US', { weekday: 'short' })}</div>
-                      </div>
-                    ))}
-                  </div>
-                  {hoveredBar?.type === 'study' && (
-                    <div className="chart-tooltip">
-                      <div className="tooltip-date">{new Date(hoveredBar.entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
-                      <div className="tooltip-value">{hoveredBar.entry.study_hours} hours</div>
-                    </div>
-                  )}
-                </div>
+              <div className="stat-card stat-study">
+                <div className="stat-label">Study</div>
+                <div className="stat-value">{summary?.avg_study_hours || "0"}</div>
+                <div className="stat-unit">hours avg</div>
               </div>
             </div>
-          )}
 
-          {/* Bottom Grid - Insights & Course Overview */}
-          <div className="dashboard-grid">
-            <div className="dashboard-left">
-              {insights.length > 0 && (
+            {/* Charts Row - Horizontal */}
+            {entries.length === 0 ? (
+              <div className="card muted">No data yet. Start logging your wellness data!</div>
+            ) : (
+              <div className="charts-row">
+                {/* Sleep Chart */}
+                <div className="chart-card">
+                  <h3>Sleep Trends</h3>
+                  <div className="chart-wrapper">
+                    <div className="simple-chart">
+                      {last7Entries.map((entry, i) => (
+                        <div
+                          key={i}
+                          className="chart-bar-container"
+                          onMouseEnter={() => setHoveredBar({ type: 'sleep', index: i, entry })}
+                          onMouseLeave={() => setHoveredBar(null)}
+                        >
+                          <div
+                            className="chart-bar chart-bar-sleep"
+                            style={{ height: `${(entry.sleep_hours / 24) * 150}px` }}
+                          ></div>
+                          <div className="chart-day">{new Date(entry.created_at).toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {hoveredBar?.type === 'sleep' && (
+                      <div className="chart-tooltip">
+                        <div className="tooltip-date">{new Date(hoveredBar.entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+                        <div className="tooltip-value">{hoveredBar.entry.sleep_hours} hours</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Stress Chart */}
+                <div className="chart-card">
+                  <h3>Stress Trends</h3>
+                  <div className="chart-wrapper">
+                    <div className="simple-chart">
+                      {last7Entries.map((entry, i) => (
+                        <div
+                          key={i}
+                          className="chart-bar-container"
+                          onMouseEnter={() => setHoveredBar({ type: 'stress', index: i, entry })}
+                          onMouseLeave={() => setHoveredBar(null)}
+                        >
+                          <div
+                            className="chart-bar chart-bar-stress"
+                            style={{ height: `${(entry.stress_level / 10) * 150}px` }}
+                          ></div>
+                          <div className="chart-day">{new Date(entry.created_at).toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {hoveredBar?.type === 'stress' && (
+                      <div className="chart-tooltip">
+                        <div className="tooltip-date">{new Date(hoveredBar.entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+                        <div className="tooltip-value">Level {hoveredBar.entry.stress_level}/10</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Study Chart */}
+                <div className="chart-card">
+                  <h3>Study Trends</h3>
+                  <div className="chart-wrapper">
+                    <div className="simple-chart">
+                      {last7Entries.map((entry, i) => (
+                        <div
+                          key={i}
+                          className="chart-bar-container"
+                          onMouseEnter={() => setHoveredBar({ type: 'study', index: i, entry })}
+                          onMouseLeave={() => setHoveredBar(null)}
+                        >
+                          <div
+                            className="chart-bar chart-bar-study"
+                            style={{ height: `${(entry.study_hours / 24) * 150}px` }}
+                          ></div>
+                          <div className="chart-day">{new Date(entry.created_at).toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                        </div>
+                      ))}
+                    </div>
+                    {hoveredBar?.type === 'study' && (
+                      <div className="chart-tooltip">
+                        <div className="tooltip-date">{new Date(hoveredBar.entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+                        <div className="tooltip-value">{hoveredBar.entry.study_hours} hours</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Bottom Grid - Insights & Course Overview */}
+            <div className="dashboard-grid">
+              <div className="dashboard-left">
+                {insights.length > 0 && (
+                  <div className="card">
+                    <h2><Lightbulb /> Insights</h2>
+                    <div className="insights-list">
+                      {insights.map((insight, index) => (
+                        <div key={index} className="insight-item">
+                          {insight}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="dashboard-right">
                 <div className="card">
-                  <h2>💡 Insights</h2>
-                  <div className="insights-list">
-                    {insights.map((insight, index) => (
-                      <div key={index} className="insight-item">
-                        {insight}
-                      </div>
-                    ))}
+                  <h2> <Book /> Course Overview</h2>
+                  <div className="muted" style={{ padding: '2rem 1rem' }}>
+                    Add courses in the Course Evaluator tab to see your progress here
                   </div>
-                </div>
-              )}
-            </div>
-
-            <div className="dashboard-right">
-              <div className="card">
-                <h2>📚 Course Overview</h2>
-                <div className="muted" style={{ padding: '2rem 1rem' }}>
-                  Add courses in the Course Evaluator tab to see your progress here
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Log Entry Tab */}
-      {activeTab === "log" && (
-        <div className="log-page">
-          <div className="card">
-            <h2>Log Today</h2>
+        {activeTab === "log" && (
+          <WellnessLogger
+            sleepHours={sleepHours}
+            setSleepHours={setSleepHours}
+            stressLevel={stressLevel}
+            setStressLevel={setStressLevel}
+            studyHours={studyHours}
+            setStudyHours={setStudyHours}
+            loading={loading}
+            onSubmit={submitWellness}
+            entries={entries}
+          />
+        )}
 
-            <form onSubmit={submitWellness}>
-              <label>
-                Sleep Hours
-                <input
-                  type="number"
-                  min="0"
-                  max="24"
-                  step="0.5"
-                  value={sleepHours}
-                  onChange={(e) => setSleepHours(e.target.value)}
-                  required
-                />
-              </label>
-
-              <label>
-                Stress Level
-                <input
-                  type="number"
-                  min="1"
-                  max="10"
-                  value={stressLevel}
-                  onChange={(e) => setStressLevel(e.target.value)}
-                />
-              </label>
-
-              <label>
-                Study Hours
-                <input
-                  type="number"
-                  min="0"
-                  max="24"
-                  step="0.5"
-                  value={studyHours}
-                  onChange={(e) => setStudyHours(e.target.value)}
-                  required
-                />
-              </label>
-
-              <button type="submit" disabled={loading}>
-                {loading ? "Saving..." : "Submit Wellness Entry"}
-              </button>
-            </form>
+        {/* Course Evaluator Tab */}
+        {activeTab === "course_evaluator" && (
+          <div className="course-evaluator-page">
+            <CoursePlanner />
           </div>
-        </div>
-      )}
-
-      {/* Course Evaluator Tab */}
-      {activeTab === "course_evaluator" && (
-        <div className="course-evaluator-page">
-          <CoursePlanner />
-        </div>
-      )}
+        )}
       </div>
     </div>
   );

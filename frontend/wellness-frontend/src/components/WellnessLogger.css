@@ -1,0 +1,694 @@
+/* Log Page Container */
+.log-page {
+  margin: 0 auto;
+  max-width: 900px;
+}
+
+/* Form */
+.log-page form label {
+  display: block;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+  color: #ddd;
+}
+
+.log-page input[type="number"] {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.log-page input[type="number"]:focus {
+  outline: none;
+  border-color: #5b9eff;
+}
+
+/* Submit Button */
+.log-page form button {
+  margin-top: 1.5rem;
+  padding: 0.875rem 1.75rem;
+  background: #ffffff;
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.log-page form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+.log-page button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.wellness-card {
+  background: linear-gradient(180deg, #161616, #101010);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 900px;
+  margin: 2rem auto;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05),
+              0 20px 40px rgba(0,0,0,0.6);
+}
+
+.wellness-card h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.wellness-card p{
+ display: inline-flex; 
+ align-items: center;
+ gap: 0.4rem;
+}
+.subtitle {
+  margin-top: 0.5rem;
+  color: #9aa0a6;
+  font-size: 0.95rem;
+}
+
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.mood-btn {
+  border-radius: 14px;
+  padding: 1.4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background-color: #1a1a1a;
+  color: white;
+}
+
+
+.mood-btn span {
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+}
+
+
+
+.mood-btn:hover {
+  transform: none;
+  box-shadow: none;
+  background-color: #222222;
+}
+
+.mood-great, .mood-great:hover {
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid #22c55e;
+  /* color: #22c55e; */
+}
+
+.mood-good, .mood-good:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid #3b82f6;
+  /* color: #3b82f6; */
+}
+
+.mood-okay, .mood-okay:hover {
+  background: rgba(234, 179, 8, 0.2);
+  border: 1px solid #eab308;
+  /* color: #eab308; */
+}
+
+.mood-bad, .mood-bad:hover {
+  background: rgba(249, 115, 22, 0.2);
+  border: 1px solid #f97316;
+  /* color: #f97316; */
+}
+
+.mood-terrible, .mood-terrible:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid #ef4444;
+  /* color: #ef4444; */
+}
+
+
+.confirmation {
+  margin-top: 1.5rem;
+  background: rgba(255,255,255,0.04);
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #d0d0d0;
+}
+
+.tracker-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  color: #999;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.input-with-button {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-with-button input {
+  flex: 1;
+  background: #1f1f1f;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: white;
+}
+
+.input-with-button input::placeholder {
+  color: #666;
+}
+
+.btn-blue {
+  background: #3b82f6;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-blue:hover {
+  background: #2563eb;
+}
+
+.btn-green {
+  background: #22c55e;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-green:hover {
+  background: #16a34a;
+}
+
+.btn-red {
+  background: #f87171;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-red:hover {
+  background: #ef4444;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.stress-content {
+  margin-bottom: 1.5rem;
+}
+
+.stress-level-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.stress-level-display label {
+  color: #999;
+  font-size: 0.875rem;
+}
+
+.stress-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fb923c;
+}
+
+.stress-content input[type="range"] {
+  width: 100%;
+  height: 6px;
+  background: #333;
+  border-radius: 3px;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.stress-content input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #666;
+}
+
+.stress-content input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #666;
+}
+
+.stress-label {
+  text-align: center;
+  color: #999;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Tracker Cards */
+.tracker-card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.tracker-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: white;
+}
+
+.emoji {
+  font-size: 1.25rem;
+}
+
+/* Input Section */
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  color: #999;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.input-with-button {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.input-with-button input {
+  flex: 1;
+  background: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: white;
+  font-size: 1rem;
+}
+
+.input-with-button input::placeholder {
+  color: #555;
+}
+
+.btn-blue {
+  background: #3b82f6;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.btn-blue:hover {
+  background: #2563eb;
+}
+
+.btn-green {
+  background: #22c55e;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.btn-green:hover {
+  background: #16a34a;
+}
+
+.btn-red {
+  background: #f87171;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.btn-red:hover {
+  background: #ef4444;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* Weekly Average Display */
+.weekly-average {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1.5rem 0 1rem 0;
+  padding: 0.5rem 0;
+}
+
+.avg-label {
+  color: #999;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.avg-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avg-badge {
+  background: #22c55e;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.avg-value-stress {
+  color: #fb923c;
+}
+
+/* Stress Section */
+.stress-content {
+  margin-bottom: 1.5rem;
+}
+
+.stress-level-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.stress-level-display label {
+  color: #999;
+  font-size: 0.875rem;
+}
+
+.stress-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fb923c;
+}
+
+.stress-label-center {
+  text-align: left;
+  color: #fb923c;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.stress-content input[type="range"] {
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(to right, 
+    #22c55e 0%, 
+    #eab308 50%, 
+    #ef4444 100%);
+  border-radius: 4px;
+  outline: none;
+  -webkit-appearance: none;
+  margin-bottom: 1rem;
+}
+
+.stress-content input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.stress-content input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Study Progress */
+.weekly-goal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.5rem 0 0.5rem 0;
+}
+
+.goal-label {
+  color: #999;
+  font-size: 0.875rem;
+}
+
+.goal-value {
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #22c55e;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.goal-achieved {
+  text-align: center;
+  color: #22c55e;
+  font-size: 0.875rem;
+  margin: 0.5rem 0;
+}
+
+.daily-average {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+  color: #999;
+  font-size: 0.875rem;
+}
+
+.avg-study {
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Chart Styling */
+.chart-wrapper {
+  position: relative;
+  margin-top: 1.5rem;
+  padding: 1rem 0;
+}
+
+.simple-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem;
+  height: 180px;
+  padding: 0 1rem;
+  position: relative;
+}
+
+/* Chart Grid Lines */
+.simple-chart::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  background: 
+    linear-gradient(to top, #222 1px, transparent 1px),
+    linear-gradient(to top, transparent calc(25% - 1px), #222 25%, transparent calc(25% + 1px)),
+    linear-gradient(to top, transparent calc(50% - 1px), #222 50%, transparent calc(50% + 1px)),
+    linear-gradient(to top, transparent calc(75% - 1px), #222 75%, transparent calc(75% + 1px));
+  background-size: 100% 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.chart-bar-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.chart-bar {
+  width: 100%;
+  max-width: 60px;
+  border-radius: 6px 6px 0 0;
+  transition: all 0.2s;
+  cursor: pointer;
+  min-height: 4px;
+}
+
+.chart-bar:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+.chart-bar-sleep {
+  background: #60a5fa;
+}
+
+.chart-bar-stress {
+  background: #f87171;
+}
+
+.chart-bar-study {
+  background: #4ade80;
+}
+
+.chart-day {
+  margin-top: 0.5rem;
+  color: #666;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.chart-tooltip {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid #444;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.tooltip-date {
+  color: #999;
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.tooltip-value {
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+/* Line Chart */
+.line-chart {
+  width: 100%;
+  height: 200px;
+  display: block;
+}
+
+.chart-point {
+  transition: all 0.2s;
+}
+
+.chart-point:hover {
+  r: 7;
+  fill: #ef4444;
+}
+
+/* Update chart-tooltip for line chart positioning */
+.tracker-card .chart-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid #444;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  transform: translateX(-50%);
+}

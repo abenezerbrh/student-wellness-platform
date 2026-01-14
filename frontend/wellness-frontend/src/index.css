@@ -29,10 +29,14 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
-
+/* 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+} */
+h1 {
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: -0.05em;
 }
 
 button {

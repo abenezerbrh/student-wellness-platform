@@ -19,6 +19,8 @@ export default function CoursePlanner() {
 
     const activeCourse = courses.find(c => c.id === activeCourseId);
 
+
+
     /* ---------- Helpers ---------- */
     const isAssessmentValid = (a) =>
         a.name.trim() !== "" &&
@@ -121,12 +123,18 @@ export default function CoursePlanner() {
                     name: course.name,
                     target_grade: Number(course.target_grade),
                     assessments: course.assessments
-                        .filter(a => a.name && a.weight)
+                        .filter(a =>
+                            !a.isEditing &&
+                            a.name.trim() !== "" &&
+                            a.weight !== "" &&
+                            !isNaN(a.weight)
+                        )
                         .map(a => ({
                             name: a.name,
                             weight: Number(a.weight),
                             grade: a.grade === "" ? null : Number(a.grade)
                         }))
+
                 }))
         };
 
@@ -282,18 +290,49 @@ export default function CoursePlanner() {
 
             {results && results.length > 0 && (
                 <div className="results-section">
-                    <h3>Result</h3>
-                    {results.map(r => (
-                        <div key={r.course}>
-                            <strong>{r.priority}. {r.course}</strong>
-                            <div>
-                                Risk: {r.risk}<br />
-                                Required Avg: {r.required_average ?? "—"}%
-                            </div>
-                        </div>
-                    ))}
+                    <h3>Results Summary</h3>
+
+                    <div className="results-grid">
+                        {results.map(r => {
+                            const riskClass = {
+                                High: "high",
+                                Medium: "medium",
+                                Low: "low",
+                                Safe: "low"
+                            }[r.risk] ?? "unknown";
+
+                            return (
+                                <div
+                                    key={r.course}
+                                    className={`result-card risk-${riskClass}`}
+                                >
+                                    <div className="result-header">
+                                        <span className="priority-badge">{r.priority}</span>
+                                        <strong className="course-name">{r.course}</strong>
+                                    </div>
+
+                                    <div className="result-body">
+                                        <div className="risk-line">
+                                            Risk:
+                                            <span className={`risk-pill ${riskClass}`}>
+                                                {r.risk}
+                                            </span>
+                                        </div>
+
+                                        <div className="required-avg">
+                                            <span className="label">Required Avg</span>
+                                            <span className="value">
+                                                {r.required_average ?? "—"}%
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             )}
+
 
         </div>
     );

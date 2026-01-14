@@ -451,6 +451,7 @@ button:disabled {
 /* Log Page */
 .log-page {
   margin: 0 auto;
+  max-width: 900px;
 }
 
 /* Course Evaluator Page */
@@ -497,4 +498,15 @@ button:disabled {
   .quick-stat {
     align-items: flex-start;
   }
+}
+
+.greeting {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.greeting-icon {
+  width: 1em;
+  height: 1em;
 }
