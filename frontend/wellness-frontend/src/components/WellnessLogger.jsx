@@ -31,7 +31,8 @@ export default function WellnessLogger({
   setStudyHours,
   loading,
   onSubmit,
-  entries = []
+  entries = [],
+  hasLoggedToday = false
 }) {
   const [selectedMood, setSelectedMood] = useState(null);
   const [hoveredBar, setHoveredBar] = useState(null);
@@ -40,10 +41,30 @@ export default function WellnessLogger({
     setSelectedMood(value);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit({
+      mood: selectedMood,
+      sleep_hours: sleepHours ? Number(sleepHours) : null,
+      stress_level: Number(stressLevel),
+      study_hours: studyHours ? Number(studyHours) : null
+    });
+  };
+
   const last7Entries = entries.slice(-7);
 
   return (
     <div className="log-page">
+      {hasLoggedToday && (
+        <div className="already-logged-banner">
+          <span className="banner-icon">✓</span>
+          <div>
+            <strong>You've already logged today!</strong>
+            <p>Come back tomorrow to log your next entry.</p>
+          </div>
+        </div>
+      )}
+
       <div className="wellness-card">
         <h2>Log Today&apos;s Wellness</h2>
         <p className="subtitle">How are you feeling today?</p>
@@ -72,24 +93,16 @@ export default function WellnessLogger({
 
         <div className="input-group">
           <label>Hours Slept Last Night</label>
-          <div className="input-with-button">
-            <input
-              type="number"
-              min="0"
-              max="24"
-              step="0.5"
-              value={sleepHours}
-              onChange={(e) => setSleepHours(e.target.value)}
-              placeholder="e.g., 7.5"
-              required
-            />
-            <button className="btn-blue" onClick={(e) => {
-              e.preventDefault();
-              if (sleepHours) onSubmit(e);
-            }}>
-              Log
-            </button>
-          </div>
+          <input
+            type="number"
+            min="0"
+            max="24"
+            step="0.5"
+            value={sleepHours}
+            onChange={(e) => setSleepHours(Number(e.target.value))}
+            placeholder="e.g., 7.5"
+            required
+          />
         </div>
 
         {last7Entries.length > 0 && (
@@ -138,7 +151,7 @@ export default function WellnessLogger({
 
         <div className="stress-content">
           <div className="stress-level-display">
-            <label>Current Stress Level:</label>
+            <label>Select Your Stress Level:</label>
             <span className="stress-value">{stressLevel} / 10</span>
           </div>
           <div className="stress-label-center">
@@ -146,21 +159,21 @@ export default function WellnessLogger({
             {stressLevel >= 4 && stressLevel <= 6 && "Moderate"}
             {stressLevel >= 7 && "High"}
           </div>
-          <input
-            type="range"
-            min="1"
-            max="10"
-            value={stressLevel}
-            onChange={(e) => setStressLevel(e.target.value)}
-          />
+          <div className="stress-buttons">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(level => (
+              <button
+                key={level}
+                onClick={() => setStressLevel(level)}
+                className={`stress-btn ${stressLevel === level ? 'active' : ''} ${
+                  level <= 3 ? 'stress-low' : level <= 6 ? 'stress-moderate' : 'stress-high'
+                }`}
+              >
+                {level}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <button className="btn-red btn-full" onClick={(e) => {
-          e.preventDefault();
-          if (stressLevel) onSubmit(e);
-        }}>
-          Log Today&apos;s Stress
-        </button>
         {last7Entries.length > 0 && (
           <>
             <div className="weekly-average">
@@ -186,7 +199,6 @@ export default function WellnessLogger({
                 <text x="35" y="145" fill="#666" fontSize="12">4</text>
                 <text x="35" y="185" fill="#666" fontSize="12">0</text>
 
-                {/* Line path */}
                 {/* Smooth curved line path */}
                 <path
                   d={(() => {
@@ -276,24 +288,16 @@ export default function WellnessLogger({
 
         <div className="input-group">
           <label>Study Hours Today</label>
-          <div className="input-with-button">
-            <input
-              type="number"
-              min="0"
-              max="24"
-              step="0.5"
-              value={studyHours}
-              onChange={(e) => setStudyHours(e.target.value)}
-              placeholder="e.g., 5"
-              required
-            />
-            <button className="btn-green" onClick={(e) => {
-              e.preventDefault();
-              if (studyHours) onSubmit(e);
-            }}>
-              Log
-            </button>
-          </div>
+          <input
+            type="number"
+            min="0"
+            max="24"
+            step="0.5"
+            value={studyHours}
+            onChange={(e) => setStudyHours(Number(e.target.value))}
+            placeholder="e.g., 5"
+            required
+          />
         </div>
 
         {last7Entries.length > 0 && (
@@ -348,6 +352,62 @@ export default function WellnessLogger({
           </>
         )}
       </div>
+
+      {/* Summary & Submit */}
+      {!hasLoggedToday && (
+        <div className="summary-card">
+          <div className="summary-header">
+            <Heart size={24} />
+            <h3>Today's Summary</h3>
+          </div>
+          
+          <div className="summary-items">
+            <div className={`summary-chip ${selectedMood ? 'filled' : 'empty'}`}>
+              <span className="chip-label">Mood</span>
+              <span className="chip-value">
+                {selectedMood ? selectedMood.charAt(0).toUpperCase() + selectedMood.slice(1) : '—'}
+              </span>
+            </div>
+
+            <div className={`summary-chip ${sleepHours ? 'filled' : 'empty'}`}>
+              <Moon size={16} />
+              <span className="chip-value">
+                {sleepHours ? `${sleepHours}h` : '—'}
+              </span>
+            </div>
+
+            <div className="summary-chip filled">
+              <Brain size={16} />
+              <span className="chip-value">{stressLevel}/10</span>
+            </div>
+
+            <div className={`summary-chip ${studyHours ? 'filled' : 'empty'}`}>
+              <BookOpen size={16} />
+              <span className="chip-value">
+                {studyHours ? `${studyHours}h` : '—'}
+              </span>
+            </div>
+          </div>
+
+          {(!selectedMood || !sleepHours || !studyHours) && (
+            <div className="missing-fields">
+              Missing: {[
+                !selectedMood && 'Mood',
+                !sleepHours && 'Sleep',
+                !studyHours && 'Study'
+              ].filter(Boolean).join(', ')}
+            </div>
+          )}
+
+          <button 
+            className="submit-btn" 
+            onClick={handleSubmit}
+            disabled={loading || !selectedMood || !sleepHours || !studyHours}
+          >
+            {loading ? 'Submitting...' : 'Submit Daily Log'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

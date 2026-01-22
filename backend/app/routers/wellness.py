@@ -127,3 +127,9 @@ def get_wellness_insights(session_id: int, db: Session = Depends(get_db)):
         "entries": result.entries,
         "insights": insights
     }
+
+@router.delete("/reset")
+def reset_wellness_data(db: Session = Depends(get_db)):
+    db.query(WellnessEntry).delete()
+    db.commit()
+    return {"status": "wellness data reset"}

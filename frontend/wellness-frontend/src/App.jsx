@@ -97,11 +97,24 @@ function App() {
     setSummary(data);
   };
 
-  const fetchInsights = async () => {
-    const res = await fetch(`${API_BASE}/wellness/insights/${sessionId}`);
+const fetchInsights = async () => {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/wellness/insights/${sessionId}`);
+
+    if (!res.ok) {
+      // No data is a VALID state after reset
+      setInsights([]);
+      return;
+    }
+
     const data = await res.json();
-    setInsights(data.insights);
-  };
+    setInsights(data.insights ?? []);
+  } catch (err) {
+    console.error("Failed to fetch insights", err);
+    setInsights([]);
+  }
+};
+
 
   const fetchEntries = async () => {
     const res = await fetch(`${API_BASE}/wellness/${sessionId}`);
@@ -116,31 +129,57 @@ function App() {
 
   const last7Entries = entries.slice(-7);
 
-  const submitWellness = async (e) => {
-    e.preventDefault();
+  const hasLoggedToday = () => {
+    if (entries.length === 0) return false;
 
-    setLoading(true);
+    const today = new Date().toDateString();
+    const lastEntry = entries[entries.length - 1];
+    const lastEntryDate = new Date(lastEntry.created_at).toDateString();
 
-    await fetch(`${API_BASE}/wellness`, {
+    return today === lastEntryDate;
+  };
+
+  const submitWellness = async (payload) => {
+  // Check if already logged today
+  if (hasLoggedToday()) {
+    alert('You have already logged your wellness data today. Come back tomorrow!');
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const response = await fetch(`${API_BASE}/wellness`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         session_id: Number(sessionId),
-        sleep_hours: Number(sleepHours),
-        stress_level: Number(stressLevel),
-        study_hours: Number(studyHours),
+        sleep_hours: payload.sleep_hours,
+        stress_level: payload.stress_level,
+        study_hours: payload.study_hours,
+        mood: payload.mood,
       }),
     });
 
-    fetchSummary();
-    fetchInsights();
-    fetchEntries();
+    if (!response.ok) {
+      const error = await response.json();
+      console.error("API Error:", error);
+      return;
+    }
+
+    await fetchSummary();
+    await fetchInsights();
+    await fetchEntries();
 
     setSleepHours("");
     setStudyHours("");
-
+    setStressLevel(5);
+  } catch (error) {
+    console.error("Submit error:", error);
+  } finally {
     setLoading(false);
-  };
+  }
+};
 
   if (!sessionId) {
     return <p className="app">Creating session...</p>;
@@ -357,6 +396,7 @@ function App() {
             loading={loading}
             onSubmit={submitWellness}
             entries={entries}
+            hasLoggedToday={hasLoggedToday()}
           />
         )}
 

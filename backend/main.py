@@ -39,3 +39,4 @@ async def not_found_handler(request: Request, exc):
             "path": request.url.path
         }
     )
+
