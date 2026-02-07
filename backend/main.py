@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi import Request
 
-from app.routers import courses
+# from app.routers import courses       # disabled for now
 
 app = FastAPI()
 
@@ -24,11 +24,20 @@ Base.metadata.create_all(bind=engine)
 
 app.include_router(session.router)
 app.include_router(wellness.router)
-app.include_router(courses.router)
+
+#app.include_router(courses.router)
 
 @app.get("/")
 def root():
     return {"status": "Backend running"}
+
+@app.get("/courses")
+def courses_coming_soon():
+    return {
+        "status": "coming_soon",
+        "message": "Course tracking is under active development."
+    }
+
 
 @app.exception_handler(404)
 async def not_found_handler(request: Request, exc):

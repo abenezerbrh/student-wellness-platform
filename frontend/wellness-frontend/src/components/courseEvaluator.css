@@ -1,0 +1,537 @@
+/* Course Evaluator Styles */
+.course-evaluator {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 2rem 1.5rem;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}
+
+/* Header Styles */
+.evaluator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-icon {
+  color: #ffffff;
+  width: 24px;
+  height: 24px;
+}
+
+.header-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.add-course-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #3b82f6;
+  border: none;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-course-btn:hover {
+  background: #2563eb;
+}
+
+.plus-icon {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Course Card Styles */
+.courses-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.course-card {
+  background: linear-gradient(180deg, #161616, #101010);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05),
+              0 20px 40px rgba(0,0,0,0.6);
+}
+
+.course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.course-title-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.course-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.course-code {
+  font-size: 0.95rem;
+  color: #9aa0a6;
+  font-weight: 500;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+.warning-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.delete-course-btn {
+  background-color: transparent;
+  border: none;
+  color: #f87171;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-course-btn:hover {
+  background-color: rgba(248, 113, 113, 0.1);
+  color: #ef4444;
+}
+
+/* Metrics Section */
+.course-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.metric-label {
+  font-size: 0.875rem;
+  color: #999;
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.metric-value.current-grade {
+  color: #3b82f6;
+}
+
+.metric-value.required-average {
+  color: #22c55e;
+}
+
+.metric-subtext {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Progress Section */
+.progress-section {
+  margin-bottom: 1.5rem;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.progress-label {
+  font-size: 0.875rem;
+  color: #999;
+  font-weight: 500;
+}
+
+.progress-percentage {
+  font-size: 1rem;
+  color: white;
+  font-weight: 600;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #22c55e;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Assessments Section */
+.assessments-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #333;
+}
+
+.assessments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.assessments-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.add-assessment-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #3b82f6;
+  border: none;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-assessment-btn:hover {
+  background: #2563eb;
+}
+
+/* Assessment Items */
+.assessments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.assessment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.assessment-item:hover {
+  border-color: #444;
+  background-color: #111;
+}
+
+.assessment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.assessment-name-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.assessment-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.assessment-weight {
+  font-size: 0.75rem;
+  color: #999;
+  background-color: #2a2a2a;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.assessment-grade-text {
+  font-size: 0.875rem;
+  color: #999;
+}
+
+/* Assessment Actions */
+.assessment-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.status-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.status-btn.completed {
+  background-color: #22c55e;
+  color: white;
+}
+
+.status-btn.completed:hover {
+  background-color: #16a34a;
+}
+
+.status-btn.pending {
+  background-color: #3a3a3a;
+  color: white;
+}
+
+.status-btn.pending:hover {
+  background-color: #444;
+}
+
+.action-btn {
+  background-color: transparent;
+  border: 1px solid #333;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.action-btn svg {
+  stroke: #999;
+  width: 16px;
+  height: 16px;
+}
+
+.action-btn:hover {
+  background-color: #1a1a1a;
+  border-color: #444;
+}
+
+.action-btn:hover svg {
+  stroke: #ffffff;
+}
+
+.edit-btn:hover {
+  border-color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.edit-btn:hover svg {
+  stroke: #3b82f6;
+}
+
+.delete-btn:hover {
+  border-color: #f87171;
+  background-color: rgba(248, 113, 113, 0.1);
+}
+
+.delete-btn:hover svg {
+  stroke: #f87171;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .course-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .course-evaluator {
+    padding: 16px;
+  }
+
+  .course-card {
+    padding: 16px;
+  }
+
+  .course-metrics {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .assessment-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .assessment-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .course-title-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.add-course-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 720px;
+  background: linear-gradient(180deg, #1c1c1c, #161616);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  border: 1px solid #2a2a2a;
+}
+
+.modal-content h3 {
+  margin: 0 0 20px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #e5e7eb;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  background: #111111;
+  border: 1px solid #2a2a2a;
+  color: #f9fafb;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.modal-content input::placeholder {
+  color: #9ca3af;
+}
+
+.modal-content input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.5);
+}
+
+.modal-content button {
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-content button:first-of-type {
+  width: 65%;
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.modal-content button:last-of-type {
+  width: 30%;
+  margin-left: 10px;
+  background: #0b0b0b;
+  color: #f9fafb;
+  border: 1px solid #2a2a2a;
+}
+
+.modal-content button:hover {
+  opacity: 0.9;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 12px;
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.checkbox-row input {
+  width: 16px;
+  height: 16px;
+}
+
+.grade-row {
+  margin-bottom: 18px;
+}
+
+.grade-row label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+}

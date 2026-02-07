@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import AnonymousSession
-
 from app.schemas.session import SessionResponse
 
 router = APIRouter(
@@ -29,3 +28,5 @@ def get_session(session_id: int, db: Session = Depends(get_db)):
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
     return session
+
+

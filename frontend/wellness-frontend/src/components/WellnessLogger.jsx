@@ -1,5 +1,6 @@
 import "./WellnessLogger.css";
 import { useState } from "react";
+
 import {
   Sparkles,
   ThumbsUp,
@@ -14,6 +15,7 @@ import {
   PartyPopper
 } from "lucide-react";
 
+
 const moods = [
   { label: "Great", value: "great", icon: Sparkles, className: "mood-great" },
   { label: "Good", value: "good", icon: ThumbsUp, className: "mood-good" },
@@ -21,6 +23,9 @@ const moods = [
   { label: "Bad", value: "bad", icon: ThumbsDown, className: "mood-bad" },
   { label: "Terrible", value: "terrible", icon: Frown, className: "mood-terrible" },
 ];
+
+
+ 
 
 export default function WellnessLogger({
   sleepHours,
@@ -31,7 +36,10 @@ export default function WellnessLogger({
   setStudyHours,
   loading,
   onSubmit,
-  entries = [],
+  last7Entries = [],
+  maxSleep, 
+  maxStress,
+  maxStudy,
   hasLoggedToday = false
 }) {
   const [selectedMood, setSelectedMood] = useState(null);
@@ -41,17 +49,46 @@ export default function WellnessLogger({
     setSelectedMood(value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit({
-      mood: selectedMood,
-      sleep_hours: sleepHours ? Number(sleepHours) : null,
-      stress_level: Number(stressLevel),
-      study_hours: studyHours ? Number(studyHours) : null
-    });
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Validate and clamp values to valid ranges
+  const validatedData = {
+    mood: selectedMood,
+    sleep_hours: sleepHours 
+      ? Math.max(0, Math.min(24, Number(sleepHours))) 
+      : null,
+    stress_level: Math.max(1, Math.min(10, Number(stressLevel))),
+    study_hours: studyHours 
+      ? Math.max(0, Math.min(24, Number(studyHours))) 
+      : null
   };
 
-  const last7Entries = entries.slice(-7);
+  // Check if required fields are present
+  if (!validatedData.mood || !validatedData.sleep_hours || !validatedData.study_hours) {
+    alert('Please fill in all required fields');
+    return;
+  }
+
+  // Show warning if values were adjusted
+  const warnings = [];
+  if (sleepHours !== validatedData.sleep_hours) {
+    warnings.push('Sleep hours adjusted to valid range (0-24)');
+  }
+  if (studyHours !== validatedData.study_hours) {
+    warnings.push('Study hours adjusted to valid range (0-24)');
+  }
+  if (stressLevel !== validatedData.stress_level) {
+    warnings.push('Stress level adjusted to valid range (1-10)');
+  }
+
+  if (warnings.length > 0) {
+    alert(warnings.join('\n'));
+  }
+
+  onSubmit(validatedData);
+};
+
 
   return (
     <div className="log-page">
@@ -126,7 +163,7 @@ export default function WellnessLogger({
                   >
                     <div
                       className="chart-bar chart-bar-sleep"
-                      style={{ height: `${(entry.sleep_hours / 24) * 150}px` }}
+                      style={{ height: `${(entry.sleep_hours / maxSleep) * 150}px` }}
                     ></div>
                     <div className="chart-day">{new Date(entry.created_at).toLocaleDateString('en-US', { weekday: 'short' })}</div>
                   </div>
@@ -336,7 +373,7 @@ export default function WellnessLogger({
                   >
                     <div
                       className="chart-bar chart-bar-study"
-                      style={{ height: `${(entry.study_hours / 24) * 150}px` }}
+                      style={{ height: `${(entry.study_hours / maxStudy) * 150}px` }}
                     ></div>
                     <div className="chart-day">{new Date(entry.created_at).toLocaleDateString('en-US', { weekday: 'short' })}</div>
                   </div>

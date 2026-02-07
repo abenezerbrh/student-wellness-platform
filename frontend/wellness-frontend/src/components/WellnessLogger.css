@@ -1,7 +1,13 @@
+
+/* Log Page Container */
 /* Log Page Container */
 .log-page {
+  max-width: 100%;
   margin: 0 auto;
-  max-width: 900px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  padding: 2.5rem 2rem; /* Match .app padding for alignment */
 }
 
 /* Form */
@@ -58,7 +64,7 @@
   background: linear-gradient(180deg, #161616, #101010);
   border-radius: 20px;
   padding: 2rem;
-  max-width: 900px;
+  max-width: none;
   margin: 2rem auto;
   box-shadow: 0 0 0 1px rgba(255,255,255,0.05),
               0 20px 40px rgba(0,0,0,0.6);
@@ -609,9 +615,9 @@
   width: 100%;
   max-width: 60px;
   border-radius: 6px 6px 0 0;
-  transition: all 0.2s;
+  transition: height 0.3s ease;
   cursor: pointer;
-  min-height: 4px;
+  min-height: 6px;
 }
 
 .chart-bar:hover {
@@ -859,4 +865,69 @@
   margin: 0;
   opacity: 0.9;
   font-size: 0.95rem;
+}
+
+/* Chrome, Safari, Edge */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:focus-visible {
+  outline: none;
+}
+
+
+/* =========================
+   2x2 layout patch
+   (paste at the bottom)
+========================= */
+
+/* Make the whole page a 2-column grid */
+/* .log-page {
+  max-width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+} */
+
+/* These sections should stay full width */
+.wellness-card,
+.already-logged-banner,
+.summary-card {
+  grid-column: 1 / -1;
+}
+
+/* Remove stacked spacing since grid handles gaps */
+.tracker-card {
+  margin-bottom: 0;
+}
+
+/* Optional: if your wellness card had max-width forcing weird centering */
+.wellness-card {
+  max-width: none;
+  margin: 0;
+}
+
+/* Mobile: back to 1 column */
+@media (max-width: 900px) {
+  .log-page {
+    grid-template-columns: 1fr;
+  }
+
+  .mood-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
