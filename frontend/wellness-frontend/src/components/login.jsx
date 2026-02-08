@@ -71,16 +71,12 @@ export default function Login() {
       <div className="login-container">
         <div className="login-header">
         
-          <h1>Welcome Back</h1>
-          <p>Sign in to continue your wellness journey</p>
+          <h1>{isSignUp ? "Welcome" : "Welcome Back"}</h1>
+          <p>{isSignUp ? "Create an account to start your wellness journey" : "Sign in to continue your wellness journey"}</p>
         </div>
 
         <div className="login-content">
 
-
-          <div className="divider">
-            <span>or continue with email</span>
-          </div>
 
           <form onSubmit={signInWithEmail} className="login-form">
             {isSignUp && (
