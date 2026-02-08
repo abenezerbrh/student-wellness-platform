@@ -556,7 +556,7 @@ function App() {
                 <FaLinkedin size={18} />
               </a>
               <a
-                href="https://github.com/abenezerbrh/student-wellness-platform"
+                href="https://github.com/abenezerbrh/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-link"
