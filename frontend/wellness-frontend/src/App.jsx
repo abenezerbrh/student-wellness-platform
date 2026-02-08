@@ -547,7 +547,7 @@ function App() {
             </p>
             <div className="footer-links">
               <a
-                href="https://www.linkedin.com/in/aben-balcha/"
+                href="https://www.linkedin.com/in/abenezerbalcha/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-link"
