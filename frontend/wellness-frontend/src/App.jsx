@@ -4,7 +4,7 @@ import CoursePlanner from "./components/CoursePlanner";
 import WellnessLogger from "./components/WellnessLogger";
 import { Sun, SunMedium, MoonStar, Lightbulb, Book } from "lucide-react";
 import ComingSoon from "./components/comingSoon";
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_BASE;
 import { supabase } from "./supabaseClient";
 import Login from "./components/login";
 import { FaRegUser } from "react-icons/fa";
