@@ -5,8 +5,8 @@ import ComingSoon from "./components/comingSoon";
 import { Sun, SunMedium, MoonStar, Lightbulb, Book } from "lucide-react";
 import { supabase } from "./supabaseClient";
 import Login from "./components/login";
-import { FaRegUser } from "react-icons/fa";
-import { IoMdCode } from "react-icons/io";
+import { FaRegUser, FaLinkedin, FaGithub } from "react-icons/fa";
+import { HiOutlineExternalLink } from "react-icons/hi";
 
 // ========================================
 // STREAK + TODAY CHECK
@@ -366,16 +366,6 @@ function App() {
                     </div>
 
                     <div className="popover-actions">
-                      <a
-                        href="https://aben-balcha.me"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="developer-btn"
-                      >
-                        <IoMdCode size={16} />
-                        <span>Developer</span>
-                      </a>
-
                       <button onClick={handleLogout} className="logout-btn">
                         <svg
                           width="16"
@@ -548,6 +538,45 @@ function App() {
             <ComingSoon />
           </div>
         )}
+
+        {/* Footer */}
+        <footer className="app-footer">
+          <div className="footer-content">
+            <p className="footer-text">
+              Built by <span className="footer-name">Abenezer Balcha</span>
+            </p>
+            <div className="footer-links">
+              <a
+                href="https://www.linkedin.com/in/aben-balcha/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-link"
+                aria-label="LinkedIn"
+              >
+                <FaLinkedin size={18} />
+              </a>
+              <a
+                href="https://github.com/yourusername"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-link"
+                aria-label="GitHub"
+              >
+                <FaGithub size={18} />
+              </a>
+              <a
+                href="http://aben-balcha.me"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-link footer-link-portfolio"
+                aria-label="Portfolio"
+              >
+                <HiOutlineExternalLink size={18} />
+                <span>Portfolio</span>
+              </a>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );
