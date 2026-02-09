@@ -8,9 +8,7 @@ import Login from "./components/login";
 import { FaRegUser, FaLinkedin, FaGithub } from "react-icons/fa";
 import { HiOutlineExternalLink } from "react-icons/hi";
 
-// ========================================
-// STREAK + TODAY CHECK
-// ========================================
+
 
 const calculateStreak = (entries) => {
   if (!entries?.length) return 0;
@@ -61,10 +59,6 @@ const checkLoggedToday = (entries) => {
   });
 };
 
-// ========================================
-// APP
-// ========================================
-
 function App() {
   const [user, setUser] = useState(null);
 
@@ -78,10 +72,8 @@ function App() {
 
   const [loading, setLoading] = useState(false);
 
-  // supabase entries (signed-in)
   const [entries, setEntries] = useState([]);
 
-  // guest entries (local only)
   const [guestEntries, setGuestEntries] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("guest_entries") || "[]");
@@ -93,9 +85,6 @@ function App() {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
-  // ----------------------------------------
-  // auth listener
-  // ----------------------------------------
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       const nextUser = session?.user ?? null;
@@ -110,7 +99,6 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // initial fetch user (if not guest)
   useEffect(() => {
     if (isGuest) return;
 
@@ -120,14 +108,11 @@ function App() {
     })();
   }, [isGuest]);
 
-  // fetch DB entries when user changes
   useEffect(() => {
     if (!user) return;
     fetchEntries();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // click outside popover
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
@@ -136,14 +121,10 @@ function App() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // keep guest entries in localStorage
   useEffect(() => {
     localStorage.setItem("guest_entries", JSON.stringify(guestEntries));
   }, [guestEntries]);
 
-  // ----------------------------------------
-  // data helpers
-  // ----------------------------------------
   const effectiveEntries = isGuest ? guestEntries : entries;
 
   const last7Entries = effectiveEntries
@@ -151,7 +132,6 @@ function App() {
     .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
   const maxSleep = Math.max(...last7Entries.map((e) => Number(e.sleep_hours ?? 0)), 1);
-  const maxStress = Math.max(...last7Entries.map((e) => Number(e.stress_level ?? 0)), 1);
   const maxStudy = Math.max(...last7Entries.map((e) => Number(e.study_hours ?? 0)), 1);
 
   const hasLoggedToday = () => checkLoggedToday(effectiveEntries);
@@ -180,9 +160,6 @@ function App() {
     };
   })();
 
-  // ----------------------------------------
-  // UI helpers
-  // ----------------------------------------
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return <>Good morning <Sun className="greeting-icon" /></>;
@@ -204,9 +181,6 @@ function App() {
     return <>Stay consistent with your wellness goals <Book size={18} /></>;
   };
 
-  // ----------------------------------------
-  // actions
-  // ----------------------------------------
   const handleLogout = async () => {
     await supabase.auth.signOut();
     localStorage.removeItem("guest");
@@ -268,7 +242,6 @@ function App() {
 
       if (error) throw error;
 
-      // keep UI fresh
       setEntries((prev) => [inserted, ...prev]);
 
       setSleepHours("");
@@ -308,17 +281,11 @@ function App() {
     alert("Saved locally (guest)");
   };
 
-  // ----------------------------------------
-  // gate
-  // ----------------------------------------
   if (!user && !isGuest) return <Login />;
 
   const name = user?.user_metadata?.full_name || user?.user_metadata?.name || "Guest";
   const email = user?.email || "Not signed in";
 
-  // ----------------------------------------
-  // render
-  // ----------------------------------------
   return (
     <div className="app">
       <div className="content">
@@ -477,7 +444,127 @@ function App() {
                   </div>
                 </div>
 
-                {/* keep your stress svg chart as-is */}
+                {/* Stress Chart */}
+                <div className="chart-card">
+                  <div className="chart-wrapper">
+                  <svg
+                    className="line-chart"
+                    viewBox="0 0 700 260"
+                    preserveAspectRatio="xMidYMid meet"
+                  >
+                    {/* Grid lines */}
+                    {[20, 60, 100, 140, 180].map((y) => (
+                      <line
+                        key={y}
+                        x1="50"
+                        y1={y}
+                        x2="650"
+                        y2={y}
+                        stroke="#333"
+                        strokeWidth="1"
+                      />
+                    ))}
+
+
+                    <text x="30" y="25" fill="#666" fontSize="12">10</text>
+                    <text x="35" y="65" fill="#666" fontSize="12">8</text>
+                    <text x="35" y="105" fill="#666" fontSize="12">6</text>
+                    <text x="35" y="145" fill="#666" fontSize="12">4</text>
+                    <text x="35" y="185" fill="#666" fontSize="12">0</text>
+
+                    <path
+                      d={(() => {
+                        if (last7Entries.length === 0) return "";
+
+                        const spacing =
+                          last7Entries.length > 1
+                            ? 600 / (last7Entries.length - 1)
+                            : 0;
+
+                        const points = last7Entries.map((entry, i) => ({
+                          x: 50 + i * spacing,
+                          y: 180 - (entry.stress_level / 10) * 160,
+                        }));
+
+                        let path = `M ${points[0].x} ${points[0].y}`;
+
+                        for (let i = 0; i < points.length - 1; i++) {
+                          const current = points[i];
+                          const next = points[i + 1];
+                          const cx = (current.x + next.x) / 2;
+
+                          path += ` C ${cx} ${current.y}, ${cx} ${next.y}, ${next.x} ${next.y}`;
+                        }
+
+                        return path;
+                      })()}
+                      fill="none"
+                      stroke="#f87171"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+
+                    {last7Entries.map((entry, i) => {
+                      const spacing =
+                        last7Entries.length > 1
+                          ? 600 / (last7Entries.length - 1)
+                          : 0;
+
+                      const x = 50 + i * spacing;
+                      const y = 180 - (entry.stress_level / 10) * 160;
+
+                      return (
+                        <g key={i}>
+                          
+                          <circle
+                            cx={x}
+                            cy={y}
+                            r="8"
+                            fill="#f87171"
+                            stroke="#1a1a1a"
+                            strokeWidth="2"
+                            className="chart-point"
+                            onMouseEnter={() =>
+                              setHoveredBar({ type: "stress", index: i, entry })
+                            }
+                            onMouseLeave={() => setHoveredBar(null)}
+                            style={{ cursor: "pointer" }}
+                          />
+
+                          <text
+                            x={x}
+                            y="195"
+                            fill="#666"
+                            fontSize="11"
+                            textAnchor="middle"
+                          >
+                            {new Date(entry.created_at).toLocaleDateString("en-US", {
+                              weekday: "short",
+                            })}
+                          </text>
+                        </g>
+                      );
+                    })}
+                  </svg>
+
+                  {hoveredBar?.type === 'stress' && (
+                    <div
+                      className="chart-tooltip">
+                      <div className="tooltip-date">
+                        {new Date(hoveredBar.entry.created_at).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric'
+                        })}
+                      </div>
+                      <div className="tooltip-value">
+                        Level {hoveredBar.entry.stress_level}/10
+                      </div>
+                    </div>
+                  )}
+                  </div>
+
+                </div>
 
                 <div className="chart-card">
                   <h3>Study Trends</h3>
@@ -528,7 +615,6 @@ function App() {
             last7Entries={last7Entries}
             hasLoggedToday={hasLoggedToday()}
             maxSleep={maxSleep}
-            maxStress={maxStress}
             maxStudy={maxStudy}
           />
         )}
